@@ -1,6 +1,6 @@
 ---
 title: "Lab 08 - Predicting rain"
-author: "INSERT NAME HERE"
+author: "Ben Calder"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -47,12 +47,37 @@ weather %>%
 
 ```{r}
 
+missing_values_RainTomorrow <- sum(is.na(weather$RainTomorrow))
+
+
+if (missing_values_RainTomorrow > 0) {
+  weather_noNA <- weather %>% filter(!is.na(RainTomorrow))
+} else {
+  weather_noNA <- weather
+}
+
+
 ```
 
 2. Which cities are the ones with more rain days? To do this, let's analyze the `RainToday` variable. 
 
 ```{r}
+missing_values_RainTomorrow <- sum(is.na(weather$RainTomorrow))
 
+if (missing_values_RainTomorrow > 0) {
+  weather_noNA <- weather %>% filter(!is.na(RainTomorrow))
+} else {
+  weather_noNA <- weather
+}
+
+rainy_days_by_city <- weather_noNA %>%
+  group_by(Location) %>%
+  summarise(Prop_RainyDays = mean(RainToday == "Yes"))
+
+rainy_days_by_city <- rainy_days_by_city %>%
+  arrange(desc(Prop_RainyDays))
+
+print(rainy_days_by_city)
 ```
 
 # Exercise 2: Logistic regression
